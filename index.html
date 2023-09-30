@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Weather Website</title>
+    <link href="./assets/css/main.css" rel="stylesheet"/>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        #weather {
+            margin-top: 50px;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: black;
+            text-align: center;
+            padding: 1px 1px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <nav class="topnav navbar navbar-expand-lg navbar-light bg-w	hite fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="./index.html"><strong>Hussien Talha</strong></a>
+            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse" id="navbarColor02" style="">
+                <ul class="navbar-nav mr-auto d-flex align-items-center">
+                    <li class="nav-item">
+                    <a class="nav-link" href="./index.html">Home<span class="sr-only">(current)</span></a>
+                    </li>    
+                    <li class="nav-item">
+                </ul>
+                <ul class="navbar-nav ml-auto d-flex align-items-center">
+                    <li class="nav-item highlight">
+                    <a class="nav-link" href="https://hussien-talha.github.io/Website/">About me</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </nav>
+
+    <h1 id="city"></h1>
+    <div id="weather">
+        <h2 id="error"></h2>
+        <h3 id="temperature"></h3>
+        <p id="description"></p>
+    </div>
+
+    <script>
+        const API_KEY = '77c5d73fc4b198052ccf54b17bc1cc20';
+
+        navigator.geolocation.getCurrentPosition(success, error);
+
+        function success(position) {
+    const latitude  = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('city').textContent = data.name;
+            let temperature = Math.round(data.main.temp - 273.15);
+            document.getElementById('temperature').textContent = temperature + '°C';
+            let description = data.weather[0].description;
+            document.getElementById('description').textContent = description;
+
+            // Check if temperature is between 35 and 48
+            if (temperature >= 35 && temperature <= 48) {
+                // Change background image to 'sun.png'
+                document.body.style.backgroundImage = "url('assets/img/sunny.jpg)";
+            }
+
+            // Check if weather is clear
+            if (description.toLowerCase() === 'clear sky') {
+                // Change background image to 'blue_sky.png'
+                document.body.style.backgroundImage = "url('assets/img/clear.jpg')";
+            }
+
+            if (description.toLowerCase() === 'few clouds') {
+                // Change background image to 'blue_sky.png'
+                document.body.style.backgroundImage = "url('assets/img/clear.jpg')";
+            }
+        });
+}
+
+        function error() {
+            alert('Unable to retrieve your location');
+            document.getElementById('error').textContent = "Unable to access location";
+        }
+    </script>
+</body>
+</html>
